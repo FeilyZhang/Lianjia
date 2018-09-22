@@ -44,7 +44,7 @@ def writeFile(filePath, content):
 '''
 **********************Function Information******************************
 *
-* Function Name : getLianjiaDat
+* Function Name : getLianjiaData
 * Create Date   : 2018-09-22
 * Discription   : Preliminary access to housing price data.
 * Parameter     : keys : Key to extract in JSON data, that is list.
