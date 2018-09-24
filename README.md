@@ -16,3 +16,13 @@ pageNumber = [27, 10, 9, 10, 35, 7, 5, 1, 2, 1, 1, 0, 1, 0]
 saveFileRootPath = "/home/fei/Documents/lianjia"
 lj.getLianjiaData(keys, districts, pageNumber, saveFileRootPath)
 ```
+```
+import lianjia as lj
+
+districts = ["weiyang", "baqiao", "changan4", "lianhu", "yanta",
+        "beilin", "xinchengqu", "xixianxinquxian", "gaoling1", 
+        "lintong", "yanliang", "lantian", "huxian", "zhouzhi"]
+pageNumber = [53, 19, 18, 14, 95, 4, 11, 0, 1, 0, 0, 0, 0, 0]
+saveFileRootPath = "/home/fei/Documents/lianjia"
+lj.getLianjiaDataZufang(districts, pageNumber, saveFileRootPath)
+```
