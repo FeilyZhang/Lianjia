@@ -104,7 +104,7 @@ def getLianjiaData(keys, districts, pageNumber, saveFileRootPath):
 * Create Date   : 2018-09-24
 * Discription   : Preliminary access to housing price data(renting a house).
 * Parameter     : districts : All districts and counties of Xi'an, Shaanxi.
-                  pageNumber : There are several pages of JSON data in each district.
+                  pageNumber : There are several pages of data.
                   saveFileRootPath : Save the root of the file.
 * Return Value  : None
 *
