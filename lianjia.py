@@ -166,3 +166,68 @@ def getLianjiaDataZufang(districts, pageNumber, saveFileRootPath):
             seeNum.clear()
             result = ""
         num = 0
+
+
+'''
+**********************Function Information******************************
+*
+* Function Name : get51jobDataZufang
+* Create Date   : 2018-09-25
+* Discription   : Preliminary access to job data.
+* Parameter     : pageNumber : There are several pages of data.
+                  saveFileRootPath : Save the root of the file.
+* Return Value  : None
+*
+************************Revision History********************************
+*
+* No   Version   Date        Revised by     Discription
+* 0    V1.0.2    2018-09-25  Feily Zhang    Create this function.
+*
+************************************************************************
+'''
+def get51jobDataZufang(pageNumber, saveFileRootPath):
+    num = 0
+    result = ""
+    job = []
+    company = []
+    location = []
+    money = []
+    time = []
+    order = []
+    clearMoney = []
+    clearMoneyIndex = 0
+    savePage = 0
+    # The loop control per page, then get per districts datas.
+    for index in range(1, pageNumber + 1):
+        url = "https://jobs.51job.com/xian/p" + str(index)
+        print(url)
+        htmlContent = requests.get(url).text
+        soup = BeautifulSoup(htmlContent)
+        job = soup.find_all("span", class_="title")
+        company = soup.find_all("p", class_="info")
+        location = soup.find_all("span", class_="location name")
+        money = soup.find_all("span", class_="location")
+        time = soup.find_all("span", class_="time")
+        for indexMoney in range(0, len(money)):
+            if indexMoney % 2 != 0:
+                clearMoney.insert(clearMoneyIndex, money[indexMoney].string)
+            clearMoneyIndex = clearMoneyIndex + 1
+        for per in range(0, len(job)):
+            result = result + str(per + num) + ",,," + str(job[per].find("a").get("title")) + ",,,"
+            result = result + str(company[per].find("a", class_="name").get("title")) + ",,,"
+            result = result + str(location[per].string) + ",,," + str(clearMoney[per]) + ",,,"
+            result = result + str(time[per].string) + "\n"
+        if num == 3000:
+            savePage = savePage + 1
+            num = 0
+        writeFile(saveFileRootPath + "/51job_original_" + str(savePage) + ".txt", result)
+        print("savePage:", savePage, "num:", num)
+        num = num + len(job)
+        job.clear()
+        company.clear()
+        location.clear()
+        money.clear()
+        time.clear()
+        order.clear()
+        clearMoney.clear()
+        result = ""
