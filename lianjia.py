@@ -173,7 +173,7 @@ def getLianjiaDataZufang(districts, pageNumber, saveFileRootPath):
 '''
 **********************Function Information******************************
 *
-* Function Name : get51jobDataZufang
+* Function Name : get51jobData
 * Create Date   : 2018-09-25
 * Discription   : Preliminary access to job data.
 * Parameter     : pageNumber : There are several pages of data.
@@ -188,7 +188,7 @@ def getLianjiaDataZufang(districts, pageNumber, saveFileRootPath):
 *
 ************************************************************************
 '''
-def get51jobDataZufang(districts, pageNumber, saveFileRootPath):
+def get51jobData(districts, pageNumber, saveFileRootPath):
     num = 0
     result = ""
     job = []
