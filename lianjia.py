@@ -234,3 +234,41 @@ def get51jobData(districts, pageNumber, saveFileRootPath):
         writeFile(saveFileRootPath + "/51job_original_" + districts[dis] + ".txt", result)
         result = ""
         print(datetime.datetime.now())
+
+
+'''
+**********************Function Information******************************
+*
+* Function Name : cleanAndAnalyze
+* Create Date   : 2018-10-02
+* Discription   : clean and analyze the data.
+* Parameter     : readFileName : file's path
+                  keyNumber : cleaning number
+                  keyNumber2 : analyzing number
+* Return Value  : None
+*
+************************Revision History********************************
+*
+* No   Version   Date        Revised by     Discription
+* 0    V1.0.4    2018-10-02  Feily Zhang    Create this function.
+*
+************************************************************************
+'''
+def cleanAndAnalyze(readFileName, keyNumber, keyNumber2):
+    result = 0
+    number = 0
+    record = []
+    with open(readFileName, 'r') as lines:
+        for line in lines:
+            record = line.rstrip().split(",,,")
+            if (len(record) != keyNumber):
+                continue
+            else:
+                value = float(record[keyNumber2])
+                if (value != 0):
+                    result = result + value
+                    number = number + 1
+                else:
+                    continue
+            record.clear()
+    print(result, number, result / number)
