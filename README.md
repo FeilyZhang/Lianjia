@@ -48,3 +48,9 @@ saveFileRootPath = "/home/fei/Documents/lianjia/51job"
 lj.get51jobDataZufang(districts, pageNumber, saveFileRootPath)
 
 ```
+
+```
+import lianjia as lj
+
+lj.cleanAndAnalyze("/home/fei/Documents/lianjia/lianjia_original_xinfang_baqiao.txt", 19, 8)
+```
