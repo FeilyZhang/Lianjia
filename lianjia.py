@@ -251,24 +251,36 @@ def get51jobData(districts, pageNumber, saveFileRootPath):
 *
 * No   Version   Date        Revised by     Discription
 * 0    V1.0.4    2018-10-02  Feily Zhang    Create this function.
+* 1    V1.0.5    2018-10-02  Feily Zhang    Add annotations and standardize variable names.
 *
 ************************************************************************
 '''
 def cleanAndAnalyze(readFileName, keyNumber, keyNumber2):
-    result = 0
-    number = 0
+    total_averager = 0
+    number_averager = 0
     record = []
+    result = []
+    average = 0.0
+    # Calculate the average value of the data in the file.
     with open(readFileName, 'r') as lines:
         for line in lines:
+            # Separates each row from the data and gets the list.
             record = line.rstrip().split(",,,")
+            # If the length of the list is not equal to the actual length.
+            # the invalid data can be eliminated.
+            # Otherwise, count the total and the number so as to calculate the mean.
             if (len(record) != keyNumber):
                 continue
             else:
                 value = float(record[keyNumber2])
+                # If the value is equal to 0, It means that the value is not credible,
+                # that is, it is useless for statistics.
                 if (value != 0):
-                    result = result + value
-                    number = number + 1
+                    total_averager = total_averager + value
+                    number_averager = number_averager + 1
                 else:
                     continue
             record.clear()
-    print(result, number, result / number)
+    averager = total_averager / number_averager
+    result.append(averager)
+    print(result)
