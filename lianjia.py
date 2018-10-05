@@ -251,36 +251,117 @@ def get51jobData(districts, pageNumber, saveFileRootPath):
 *
 * No   Version   Date        Revised by     Discription
 * 0    V1.0.4    2018-10-02  Feily Zhang    Create this function.
-* 1    V1.0.5    2018-10-02  Feily Zhang    Add annotations and standardize variable names.
+* 1    V1.0.5    2018-10-05  Feily Zhang    add some function.
 *
 ************************************************************************
 '''
-def cleanAndAnalyze(readFileName, keyNumber, keyNumber2):
+def cleanAndAnalyze(districts, keyNumber, keyNumber2):
     total_averager = 0
     number_averager = 0
     record = []
-    result = []
-    average = 0.0
-    # Calculate the average value of the data in the file.
-    with open(readFileName, 'r') as lines:
-        for line in lines:
-            # Separates each row from the data and gets the list.
-            record = line.rstrip().split(",,,")
-            # If the length of the list is not equal to the actual length.
-            # the invalid data can be eliminated.
-            # Otherwise, count the total and the number so as to calculate the mean.
-            if (len(record) != keyNumber):
-                continue
-            else:
-                value = float(record[keyNumber2])
-                # If the value is equal to 0, It means that the value is not credible,
-                # that is, it is useless for statistics.
-                if (value != 0):
-                    total_averager = total_averager + value
-                    number_averager = number_averager + 1
-                else:
+    result = {}
+    averager = 0
+    priceSort = []
+    topAdd = 0
+    path = "/home/fei/Documents/lianjia/lianjia_original_xinfang_" + districts + ".txt"
+    if os.path.exists(path):
+        # Calculate the average value of the data in the file.
+        with open(path, 'r') as lines:
+            for line in lines:
+                # Separates each row from the data and gets the list.
+                record = line.rstrip().split(",,,")
+                # If the length of the list is not equal to the actual length.
+                # the invalid data can be eliminated.
+                # Otherwise, count the total and the number so as to calculate the mean.
+                if (len(record) != keyNumber):
                     continue
-            record.clear()
-    averager = total_averager / number_averager
-    result.append(averager)
-    print(result)
+                else:
+                    value = float(record[keyNumber2])
+                    # If the value is equal to 0, It means that the value is not credible,
+                    # that is, it is useless for statistics.
+                    if (value != 0):
+                        total_averager = total_averager + value
+                        number_averager = number_averager + 1
+                        priceSort.append(value)
+                    else:
+                        continue
+                record.clear()
+        if number_averager != 0:
+            averager = int(total_averager / number_averager)
+            result[districts + "_AVERAGER"] = averager
+        else:
+            result[districts + "_AVERAGER"] = "All data is invalid."
+    else:
+        result[districts + "_AVERAGER"] = "file not found."
+    priceSort.sort()
+    if len(priceSort) != 0:
+        result[districts + "_MAX"] = priceSort[len(priceSort) - 1]
+        result[districts + "_MIN"] = priceSort[0]
+        result[districts + "_RANGE"] = priceSort[len(priceSort) - 1] - priceSort[0]
+    else:
+        result[districts + "_MAX"] = "All data is invalid."
+        result[districts + "_MIN"] = "All data is invalid."
+        result[districts + "_RANGE"] = "All data is invalid."
+    
+    if os.path.exists(path):
+        # Calculate the standard deviation of the data in the file.
+        with open(path, 'r') as lines:
+            for line in lines:
+                # Separates each row from the data and gets the list.
+                record = line.rstrip().split(",,,")
+                # If the length of the list is not equal to the actual length.
+                # the invalid data can be eliminated.
+                if (len(record) != keyNumber):
+                    continue
+                else:
+                    value = float(record[keyNumber2])
+                    # If the value is equal to 0, It means that the value is not credible,
+                    # that is, it is useless for statistics.
+                    if (value != 0):
+                        topAdd += pow(value - averager, 2)
+                    else:
+                        continue
+                record.clear()
+            if number_averager != 0:
+                result[districts + "_STANDAR"] = int(pow(topAdd / number_averager, 0.5))
+            else:
+                result[districts + "_STANDAR"] = "All data is invalid."
+    else:
+        result[districts + "_STANDAR"] = "file not found."
+    return result
+
+def calculate(array):
+    lists = []
+    result = {}
+    averagerAll = 0
+    topAdd = 0
+    for arr in array:
+        if is_number(arr):
+            averagerAll += arr
+            lists.append(arr)
+        else:
+            continue
+    result["averager"] = int(averagerAll / len(lists))
+    result["averagerMax"] = int(sorted(lists)[len(lists) - 1])
+    result["averagerMin"] = int(sorted(lists)[0])
+    result["averagerRange"] = int(result["averagerMax"] - result["averagerMin"])
+    for li in lists:
+        topAdd += pow(li - result["averager"], 2)
+    result["averagerStandar"] = int(pow(topAdd / len(lists), 0.5))
+    return result
+
+def is_number(s):
+    try:
+        float(s)
+        return True
+    except ValueError:
+        pass
+ 
+    try:
+        import unicodedata
+        unicodedata.numeric(s)
+        return True
+    except (TypeError, ValueError):
+        pass
+ 
+    return False
