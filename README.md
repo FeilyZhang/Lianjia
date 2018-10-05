@@ -54,3 +54,19 @@ import lianjia as lj
 
 lj.cleanAndAnalyze("/home/fei/Documents/lianjia/lianjia_original_xinfang_baqiao.txt", 19, 8)
 ```
+```
+import lianjia as lj
+
+averager = []
+averagerKey = []
+averagerValue = []
+districts = ["weiyang", "baqiao", "changan4", "lianhu", "yanta",
+        "beilin", "xinchengqu", "xixianxinquxian", "gaoling1", 
+        "lintong", "yanliang", "lantian", "huxian", "zhouzhi"]
+for dis in districts:
+    averager.append(lj.cleanAndAnalyze(dis, 19, 11))
+averagerKey = districts
+for li in range(0, len(averager) - 1):
+    averagerValue.append(averager[li][districts[li] + "_AVERAGER"])
+print(lj.calculate(averagerValue))
+```
