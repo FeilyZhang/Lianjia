@@ -365,3 +365,135 @@ def is_number(s):
         pass
  
     return False
+
+def countHouseNumber(districts):
+    result = {}
+    legalData = 0
+    invalidData = 0
+    path = "/home/fei/Documents/lianjia/lianjia_original_xinfang_" + districts + ".txt"
+    if os.path.exists(path):
+        with open(path, 'r') as lines:
+            for line in lines:
+                record = line.rstrip().split(",,,")
+                if int(record[11]) != 0:
+                    legalData += 1
+                else:
+                    invalidData += 1
+        result[districts + "_legalData"] = legalData
+        result[districts + "_invalidData"] = invalidData
+        result[districts + "_totalData"] = legalData + invalidData
+        if result[districts + "_totalData"] == 0:
+            result[districts + "_legalRate"] = "None"
+            result[districts + "_invalidRate"] = "None"
+        else:
+            result[districts + "_legalRate"] = str((legalData / result[districts + "_totalData"]) * 100) + '%'
+            result[districts + "_invalidRate"] = str((invalidData / result[districts + "_totalData"]) * 100) + '%'
+    else:
+        result[districts + "_warning"] = "file not found"
+    return result
+
+def searchDistrictFromDistrict(averager, districts, statistics, flag):
+    allAverager = []
+    allDistricts = []
+    for sta in range(0, len(statistics) - 1):
+        if is_number(statistics[sta][districts[sta] + "_" + flag]):
+            allAverager.append(statistics[sta][districts[sta] + "_" + flag])
+            allDistricts.append(districts[sta])
+    for index in range(0, len(allDistricts)):
+        if averager == allAverager[index]:
+            return str(averager) + "   " + allDistricts[index]
+
+def countHouseNumberAboveOrBlow(districts, averagerAll):
+    largerNumber = 0
+    lessNumber = 0
+    record = []
+    result = {}
+    temp = {}
+    for dis in districts:
+        path = "/home/fei/Documents/lianjia/lianjia_original_xinfang_" + dis + ".txt"
+        if os.path.exists(path):
+            with open(path, 'r') as lines:
+                for line in lines:
+                    record = line.rstrip().split(",,,")
+                    if int(record[11]) != 0:
+                        if int(record[11]) >= averagerAll:
+                            largerNumber += 1
+                        else:
+                            lessNumber += 1
+                record.clear()
+            temp["largerNumber"] = largerNumber
+            temp["lessNumber"] = lessNumber
+            temp["totalNumber"] = lessNumber + largerNumber
+            if temp["totalNumber"] != 0:
+                temp["largerNumberRate"] = str(largerNumber / temp["totalNumber"] * 100) + '%'
+                temp["lessNumberRate"] = str(lessNumber / temp["totalNumber"] * 100) + '%'
+            else:
+                temp["largerNumberRate"] = "temp[dis + \"_totalNumber\"] is 0"
+                temp["lessNumberRate"] = "temp[dis + \"_totalNumber\"] is 0"
+            result[dis] = temp
+            largerNumber = 0
+            lessNumber = 0
+            temp = {}
+        else:
+            result[dis] = "file not found"
+    return result
+
+def countTag(districts):
+    tag = []    
+    nums = 1
+    account = 1
+    record = []
+    result = {}
+    valueList = []
+    for dis in districts:
+        path = "/home/fei/Documents/lianjia/lianjia_original_xinfang_" + dis + ".txt"
+        if os.path.exists(path):
+            with open(path, 'r') as lines:
+                for line in lines:
+                    record = line.rstrip().split(",,,")[18].split(',')
+                    for re in record:
+                        tag.append(re)
+    for t in tag:
+        if t[0] == '[':
+            valueList.append(t[1:])
+        elif t[len(t) - 1] == ']':
+            valueList.append(t[:len(t) - 1 - 1])
+    
+    maxNum = len(valueList)
+    # Data statistics
+    while True:
+
+        # When the list is not empty
+        if maxNum != 0:
+
+            # When a round of statistics does not reach the end of the list
+            if nums != maxNum:
+                if valueList[0] == valueList[nums]:
+                    account += 1
+                    valueList.pop(nums)
+                    maxNum -= 1
+                    result[valueList[0]] = account
+                else:
+                    nums += 1
+                    
+            # When a round of statistics reaches the end of the list
+            else:
+
+                # The last round of statistics may have only one list element left, 
+                # so the element and its statistical results must be added to the dictionary before the element is popped.
+                if maxNum == 1 and nums == 1:
+                    result[valueList[0]] = account
+                    valueList.pop(0)
+                    break
+
+                # When not the last round of statistics for a list element or the last round of statistics, as usual
+                else:
+                    valueList.pop(0)
+                    maxNum -= 1
+                    nums = 1
+                    account = 1
+
+        # When the list is empty
+        else:
+            break
+    return result
