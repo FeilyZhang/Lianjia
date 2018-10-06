@@ -80,11 +80,27 @@ statistics = []
 averagerKey = []
 averagerValue = []
 standardDeviation = []
+zufangStatistics = {}
+job51Statictics = {}
+topZufang = 0
+topJob51 = 0
+bottomZufang = 0
+bottomJob51 = 0
 totalStatistics = {}
 districts = ["weiyang", "baqiao", "changan4", "lianhu", "yanta",
         "beilin", "xinchengqu", "xixianxinquxian", "gaoling1", 
         "lintong", "yanliang", "lantian", "huxian", "zhouzhi"]
-
+types = ["jisuanjiyingjian", "jisuanjiruanjian", "hulianwang", "it-guanli", "jishuzhichi",
+    "tongxinjishukaifa", "dianzi", "xiaoshouguanli", "xiaoshourenyuan", "xiaoshouxingzheng",
+    "kefuzhichi", "caiwushenji", "jinrongzhengquan", "yinhang", "baoxian", "shengchanyingyun",
+    "zhilianganquan", "gongchengjixie", "qichezhizao", "qichexiaoshou", "jigongpugong",
+    "fuzhuangfangzhi", "caigou", "maoyi", "wuliucangchu", "shengwuzhiyao", "huagong", "yiliao",
+    "guanggao", "gongguanmeijie", "shichangyingxiao", "yingshimeiti", "bianjichuban", "yishusheji",
+    "yishusheji", "fangdichankaifa", "fangdichanxiaoshou", "wuyeguanli", "renliziyuan", "gaojiguanli",
+    "xingzhenghouqin", "zixunguwen", "lvshifawu", "jiaoshi", "peixun", "keyan", "canyinfuwu", "jiudianlvyou",
+    "meirongbaojian", "baihuolingshou", "jiaotongyunshu", "jiazhengbaojie", "gongwuyuan", "fanyi", "zaixiaoxuesheng",
+    "peixunshixi", "jianzhi", "huanbao", "nonglinmuyu", "wangdiantaobao", "jixiejichuang", "yinshuabaozhuang",
+    "yundongjianshen", "xiuxianyule", "others"]
 print("--------------------The following indicators are printed for each district and county--------------------")
 for dis in districts:
     print(lj.cleanAndAnalyze(dis, 19, 11))
@@ -154,4 +170,23 @@ print("--------------------Excluding invalid data, the number of houses in the d
 print(lj.countHouseNumberAboveOrBlow(districts, totalStatistics["averager"]))
 
 print(lj.countTag(districts))
+
+print("--------------------The following is to print the rental data and overall average of counties and counties--------------------")
+zufangStatistics = lj.calculateZufangAverager(districts)
+print(zufangStatistics)
+print()
+for value in zufangStatistics.values():
+    topZufang += int(value)
+    bottomZufang += 1
+print("xian's rent house averager price: " + str(int(topZufang / bottomZufang)) + "\n")
+
+print("--------------------Print industry wage data and overall mean--------------------")
+job51Statictics = lj.calculate51jobAverager(types)
+print(job51Statictics)
+print()
+for value in job51Statictics.values():
+    topJob51 += int(value)
+    bottomJob51 += 1
+print("xian's rent house averager price: " + str(int(topJob51 / bottomJob51)) + "\n")
+
 ```
