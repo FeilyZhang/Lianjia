@@ -497,3 +497,50 @@ def countTag(districts):
         else:
             break
     return result
+
+def calculateZufangAverager(districts):
+    top = 0
+    bottom = 0
+    result = {}
+    for dis in districts:
+        path = "/home/fei/Documents/lianjia/lianjia_original_zufang_" + dis + ".txt"
+        if os.path.exists(path):
+            with open(path, 'r') as lines:
+                for line in lines:
+                    record = line.rstrip().split(",,,")
+                    if is_number(record[6]) and int(record[6]) != 0:
+                        top += int(record[6])
+                        bottom += 1
+                    else:
+                        continue
+            if bottom != 0:
+                result[dis] = int(top / bottom)
+            top = 0
+            bottom = 0
+    return result
+
+def calculate51jobAverager(types):
+    top = 0
+    bottom = 0
+    result = {}
+    # ~ print(record[:len(record) - 3].split('-')[0])
+    # ~ print(record[len(record) - 3:])
+    for ty in types:
+        path = "/home/fei/Documents/lianjia/51job/51job_original_" + ty + ".txt"
+        if os.path.exists(path):
+            with open(path, 'r') as lines:
+                for line in lines:
+                    record = line.rstrip().split(",,,")
+                    if record[4][len(record) - 3:] == "千/月":
+                        top += int(record[4][:len(record) - 3].split('-')[0]) * 1000
+                        bottom += 1
+                    elif record[4][len(record) - 3:] == "万/月":
+                        top += int(record[4][:len(record) - 3].split('-')[0]) * 10000
+                        bottom += 1
+                    else:
+                        continue
+            if bottom != 0:
+                result[ty] = int(top / bottom)
+            top = 0
+            bottom = 0
+    return result
