@@ -70,3 +70,88 @@ for li in range(0, len(averager) - 1):
     averagerValue.append(averager[li][districts[li] + "_AVERAGER"])
 print(lj.calculate(averagerValue))
 ```
+
+```
+import lianjia as lj
+
+less = []
+larger = []
+statistics = []
+averagerKey = []
+averagerValue = []
+standardDeviation = []
+totalStatistics = {}
+districts = ["weiyang", "baqiao", "changan4", "lianhu", "yanta",
+        "beilin", "xinchengqu", "xixianxinquxian", "gaoling1", 
+        "lintong", "yanliang", "lantian", "huxian", "zhouzhi"]
+
+print("--------------------The following indicators are printed for each district and county--------------------")
+for dis in districts:
+    print(lj.cleanAndAnalyze(dis, 19, 11))
+    statistics.append(lj.cleanAndAnalyze(dis, 19, 11))
+print("\n")
+
+averagerKey = districts
+for li in range(0, len(statistics) - 1):
+    averagerValue.append(statistics[li][districts[li] + "_averager"])
+for li in range(0, len(statistics) - 1):
+    standardDeviation.append(statistics[li][districts[li] + "_standar"])
+
+print("--------------------The following is to print the statistics of the county's overall average and its indicators--------------------")
+totalStatistics = lj.calculateAll(averagerValue)
+print(totalStatistics)
+print("\n")
+
+print("--------------------The following legal and invalid data are printed in all districts and counties--------------------")
+for dis in districts:
+    print(lj.countHouseNumber(dis))
+print("\n")
+
+print("--------------------The following print averages are compared and sorted--------------------")
+print("The overall mean value is ", totalStatistics["averager"])
+print("The average housing price in the following districts is larger than the average value.")
+for averager in averagerValue:
+    if lj.is_number(averager):
+        if averager > totalStatistics["averager"]:
+            larger.append(averager)
+larger.sort()
+for lar in larger:
+    print(lj.searchDistrictFromDistrict(lar, districts, statistics, "averager"))
+print("The average housing price in the following districts is less than the mean value.")
+for averager in averagerValue:
+    if lj.is_number(averager):
+        if averager < totalStatistics["averager"]:
+            less.append(averager)
+less.sort()
+for les in less:
+    print(lj.searchDistrictFromDistrict(les, districts, statistics, "averager"))
+
+larger.clear()
+less.clear()
+print("\n")
+
+print("--------------------The following print standard deviation are compared and sorted--------------------")
+print("The overall mean value is ", totalStatistics["averagerStandar"])
+print("The standard deviation housing price in the following districts is larger than the standard deviation.")
+for averager in standardDeviation:
+    if lj.is_number(averager):
+        if averager > totalStatistics["averagerStandar"]:
+            larger.append(averager)
+larger.sort()
+for lar in larger:
+    print(lj.searchDistrictFromDistrict(lar, districts, statistics, "standar"))
+print("The standard deviation housing price in the following districts is less than the standard deviation.")
+for averager in standardDeviation:
+    if lj.is_number(averager):
+        if averager < totalStatistics["averagerStandar"]:
+            less.append(averager)
+less.sort()
+for les in less:
+    print(lj.searchDistrictFromDistrict(les, districts, statistics, "standar"))
+print("\n")
+
+print("--------------------Excluding invalid data, the number of houses in the districts above and below the average is calculated and their proportion is calculated.--------------------")
+print(lj.countHouseNumberAboveOrBlow(districts, totalStatistics["averager"]))
+
+print(lj.countTag(districts))
+```
