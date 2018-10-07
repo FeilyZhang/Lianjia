@@ -545,3 +545,121 @@ def calculate51jobAverager(types):
             top = 0
             bottom = 0
     return result
+
+  
+def calculate51jobAverager1(types):
+    top = 0
+    bottom = 0
+    result = {}
+    # ~ print(record[:len(record) - 3].split('-')[0])
+    # ~ print(record[len(record) - 3:])
+    for ty in types:
+        path = "/home/fei/Documents/lianjia/51job/51job_original_" + ty + ".txt"
+        if os.path.exists(path):
+            with open(path, 'r') as lines:
+                for line in lines:
+                    record = line.rstrip().split(",,,")
+                    if record[4][len(record) - 3:] == "千/月":
+                        top += int(record[4][:len(record) - 3].split('-')[1]) * 1000
+                        bottom += 1
+                    elif record[4][len(record) - 3:] == "万/月":
+                        top += int(record[4][:len(record) - 3].split('-')[1]) * 10000
+                        bottom += 1
+                    else:
+                        continue
+            if bottom != 0:
+                result[ty] = int(top / bottom)
+            top = 0
+            bottom = 0
+    return result
+    
+def topAndBottom(dis):
+    price = []
+    result = {}
+    finalResult = {}
+    tempPrice = 0
+    top10Id = []
+    top10Address = []
+    top10Name = []
+    top10Price = []
+    bottom10Id = []
+    bottom10Address = []
+    bottom10Name = []
+    bottom10Price = []
+    length = 0
+    record = []
+    liness = []
+    path = "/home/fei/Documents/lianjia/lianjia_original_xinfang_" + dis + ".txt"
+    if os.path.exists(path):
+        with open(path, 'r') as lines:
+            for line in lines:
+                tempPrice = int(line.rstrip().split(",,,")[11])
+                if tempPrice != 0:
+                    liness.append(line)
+                    price.append(tempPrice)
+        price = list(set(price))
+        if len(price) >= 20:
+            price.sort(reverse=True)
+            for index in range(0, 10):
+                for li in liness:
+                    record = li.split(",,,")
+                    if int(price[index]) == int(record[11]):
+                        top10Id.append(record[0])
+                        top10Address.append(record[10])
+                        top10Name.append(record[6])
+                        top10Price.append(record[11])
+                        del li
+            result["id"] = top10Id
+            result["address"] = top10Address
+            result["name"] = top10Name
+            result["price"] = top10Price
+            finalResult["top"] = result
+            result = {}
+            price.sort()
+            for index in range(0, 10):
+                for li in liness:
+                    record = li.split(",,,")
+                    if int(price[index]) == int(record[11]):
+                        bottom10Id.append(record[0])
+                        bottom10Address.append(record[10])
+                        bottom10Name.append(record[6])
+                        bottom10Price.append(record[11])
+                        del li
+            result["id"] = bottom10Id
+            result["address"] = bottom10Address
+            result["name"] = bottom10Name
+            result["price"] = bottom10Price
+            finalResult["bottom"] = result
+        elif len(price) == 1:
+            price.sort(reverse=True)
+            for index in range(0, len(price)):
+                for li in liness:
+                    record = li.split(",,,")
+                    if int(price[index]) == int(record[11]):
+                        top10Id.append(record[0])
+                        top10Address.append(record[10])
+                        top10Name.append(record[6])
+                        top10Price.append(record[11])
+                        del li
+            result["id"] = top10Id
+            result["address"] = top10Address
+            result["name"] = top10Name
+            result["price"] = top10Price
+            finalResult["top"] = result
+        else:
+            price.sort(reverse=True)
+            for index in range(0, len(price) - 1):
+                for li in liness:
+                    record = li.split(",,,")
+                    if int(price[index]) == int(record[11]):
+                        top10Id.append(record[0])
+                        top10Address.append(record[10])
+                        top10Name.append(record[6])
+                        top10Price.append(record[11])
+                        del li
+            result["id"] = top10Id
+            result["address"] = top10Address
+            result["name"] = top10Name
+            result["price"] = top10Price
+            finalResult["top"] = result
+        return finalResult
