@@ -55,7 +55,7 @@ The average housing price in the following districts is less than the mean value
 
 
 --------------------The following print standard deviation are compared and sorted--------------------
-The overall mean value is  3442
+The overall standard deviation is  3442
 The standard deviation housing price in the following districts is larger than the standard deviation.
 3986   xixianxinquxian
 5823   baqiao
